@@ -21,7 +21,7 @@ const FaceRecognition = ({ imageUrl, boxes }) => {
 			<div className='absolute mt2'>
 				<img id='inputImage' src={imageUrl} alt='' width='700px' height='auto' />
 				{boxesMarkup}
-				<div className='white fw-4 f2 lh-copy'>
+				<div className='white fw-4 f3 lh-copy'>
 					{faceDetectionMessage}
 				</div>
 			</div>

@@ -5,7 +5,7 @@ const ImageLinkForm = ({ detectClick, detectUrlChange }) => {
 	return (
 		<div>
 			<p className='f3'>
-				{'This Magic Brain will detect faces in your pictures. Give it a try.'}
+				{'This Magic Brain will detect faces in your pictures. Insert image url below.'}
 			</p>
 			<div className='center form pa3 f4 br3 shadow-5 flex justify-center'>
 				<input
