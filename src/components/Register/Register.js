@@ -8,8 +8,10 @@ class Register extends React.Component {
 		this.state = {
 			registerName: '',
 			registerEmail: '',
-			registerPassword: ''
-		}
+			registerPassword: '',
+			isRegistrationFailed: false,
+			isFetchFailed: false
+		};
 	}
 
 	onSubmitRegister = () => {
@@ -24,12 +26,19 @@ class Register extends React.Component {
 		})
 			.then(response => response.json())
 			.then(user => {
-				console.log('onSubmitRegister', user);
 				if (user.id) {
-					console.log('afterUserId', user.id);
+					this.setState({ isRegistrationFailed: false, isFetchFailed: false });
 					this.props.loadUser(user);
 					this.props.onRouteChange('main');
+				} else {
+					this.setState({ isRegistrationFailed: true });
 				}
+			})
+			.catch(err => {
+				if (err.message === "Failed to fetch") {
+					this.setState({ isFetchFailed: true });
+				}
+				console.table({ err });
 			});
 	}
 
@@ -58,6 +67,8 @@ class Register extends React.Component {
 									className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
 									type="text"
 									name="name"
+									required
+									minLength="3"
 									id="name"
 									onChange={this.onNameChange}
 								/>
@@ -68,6 +79,7 @@ class Register extends React.Component {
 									className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
 									type="email"
 									name="email-address"
+									required
 									id="email-address"
 									onChange={this.onEmailChange}
 								/>
@@ -78,6 +90,8 @@ class Register extends React.Component {
 									className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
 									type="password"
 									name="password"
+									required
+									minLength="8"
 									id="password"
 									onChange={this.onPasswordChange}
 								/>
@@ -89,6 +103,10 @@ class Register extends React.Component {
 								type="submit" value="Register"
 								onClick={this.onSubmitRegister}
 							/>
+							{this.state.isRegistrationFailed &&
+								<p className="db mv4 fw6 lh-copy f6 bg-yellow">Registration failed! <span role='img' aria-label='no-entry'>⛔</span></p>}
+							{this.state.isFetchFailed &&
+								<p className="db mv4 fw6 lh-copy f6 bg-red">API disconnected! <span role='img' aria-label='broken-heart'>💔</span></p>}
 						</div>
 					</div>
 				</main>

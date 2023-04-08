@@ -7,7 +7,10 @@ class Signin extends React.Component {
 		super(props);
 		this.state = {
 			signInEmail: '',
-			signInPassword: ''
+			signInPassword: '',
+			isSigninFailed: false,
+			isFetchFailed: false
+
 		}
 	}
 
@@ -23,9 +26,19 @@ class Signin extends React.Component {
 			.then(response => response.json())
 			.then(user => {
 				if (user.id) {
+					this.setState({ isSigninFailed: false, isFetchFailed: false });
 					this.props.loadUser(user);
 					this.props.onRouteChange('main');
 				}
+				else {
+					this.setState({ isSigninFailed: true });
+				}
+			})
+			.catch(err => {
+				if (err.message === "Failed to fetch") {
+					this.setState({ isFetchFailed: true });
+				}
+				console.table({ err });
 			});
 	}
 
@@ -79,6 +92,10 @@ class Signin extends React.Component {
 							>
 								Register
 							</p>
+							{this.state.isSigninFailed &&
+								<p className="db fw6 lh-copy f6 bg-yellow">Wrong credentials! <span role='img' aria-label='face-palm'>🤦‍♂️</span></p>}
+							{this.state.isFetchFailed &&
+								<p className="db fw6 lh-copy f6 bg-red">API disconnected! <span role='img' aria-label='broken-heart'>💔</span></p>}
 						</div>
 					</div>
 				</main>

@@ -52,7 +52,6 @@ class App extends Component {
 
 	loadUser = (data) => {
 		this.setState({ user: data });
-		//console.log('loadUser', this.state.user);
 	}
 
 	calculateFaceLocation = (data) => {
@@ -60,12 +59,11 @@ class App extends Component {
 		const image = document.getElementById('inputImage');
 		const width = Number(image.width);
 		const height = Number(image.height);
-		//console.log(width, height);
 		return {
 			leftCol: clarifaiFace.left_col * width,
 			topRow: clarifaiFace.top_row * height,
 			rightCol: width - (clarifaiFace.right_col * width),
-			bottomRow: height - (clarifaiFace.bottom_row * height)
+			bottomRow: height * 1.085 - (clarifaiFace.bottom_row * height)
 		}
 	};
 
@@ -133,7 +131,6 @@ class App extends Component {
 					joined: ''
 				}
 			});
-			console.log('onRouteChange', this.state);
 		} else if (route === 'main') {
 			this.setState({ isSignedIn: true });
 		}
