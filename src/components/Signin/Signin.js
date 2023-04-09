@@ -1,6 +1,6 @@
 import React from 'react';
-import { apiHost, apiPort } from '../utils/env';
 
+const host = [process.env.REACT_APP_HOSTNAME, process.env.REACT_APP_PORT].filter(a => a).join(':');
 
 class Signin extends React.Component {
 	constructor(props) {
@@ -15,7 +15,7 @@ class Signin extends React.Component {
 	}
 
 	onSubmitSignIn = () => {
-		fetch(`${apiHost}:${apiPort}/signin`, {
+		fetch(`${host}/signin`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
@@ -38,7 +38,7 @@ class Signin extends React.Component {
 				if (err.message === "Failed to fetch") {
 					this.setState({ isFetchFailed: true });
 				}
-				console.table({ err });
+				// console.table({ err });
 			});
 	}
 

@@ -7,9 +7,10 @@ import Signin from './components/Signin/Signin';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import UserInfo from './components/UserInfo/UserInfo';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
-import { apiHost, apiPort } from './components/utils/env';
-
 import Logo from './components/logo/Logo';
+
+const host = [process.env.REACT_APP_HOSTNAME, process.env.REACT_APP_PORT].filter(a => a).join(':');
+console.log({ host });
 
 const particlesOptions = {
 	particles: {
@@ -79,7 +80,7 @@ class App extends Component {
 	onDetectClick = () => {
 		this.setState({ imageUrl: this.state.input });
 
-		fetch(`${apiHost}:${apiPort}/imageurl`, {
+		fetch(`${host}/imageurl`, {
 			method: 'post',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
@@ -89,7 +90,7 @@ class App extends Component {
 			.then(response => response.json())
 			.then(response => {
 				if (response) {
-					fetch(`${apiHost}:${apiPort}/image`, {
+					fetch(`${host}/image`, {
 						method: 'put',
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify({

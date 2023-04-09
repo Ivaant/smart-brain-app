@@ -1,6 +1,6 @@
 import React from 'react';
-import { apiHost, apiPort } from '../utils/env';
 
+const host = [process.env.REACT_APP_HOSTNAME, process.env.REACT_APP_PORT].filter(a => a).join(':');
 
 class Register extends React.Component {
 	constructor(props) {
@@ -15,7 +15,7 @@ class Register extends React.Component {
 	}
 
 	onSubmitRegister = () => {
-		fetch(`${apiHost}:${apiPort}/register`, {
+		fetch(`${host}/register`, {
 			method: 'post',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
