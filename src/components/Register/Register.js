@@ -1,6 +1,5 @@
 import React from 'react';
-
-const host = [process.env.REACT_APP_HOSTNAME, process.env.REACT_APP_PORT].filter(a => a).join(':');
+import { host } from '../utils/utils';
 
 class Register extends React.Component {
 	constructor(props) {
@@ -35,10 +34,9 @@ class Register extends React.Component {
 				}
 			})
 			.catch(err => {
-				if (err.message === "Failed to fetch") {
+				if (err.message.startsWith('Failed')) {
 					this.setState({ isFetchFailed: true });
 				}
-				console.table({ err });
 			});
 	}
 

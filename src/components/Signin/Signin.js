@@ -1,6 +1,5 @@
 import React from 'react';
-
-const host = [process.env.REACT_APP_HOSTNAME, process.env.REACT_APP_PORT].filter(a => a).join(':');
+import { host } from '../utils/utils';
 
 class Signin extends React.Component {
 	constructor(props) {

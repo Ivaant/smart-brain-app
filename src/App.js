@@ -8,9 +8,7 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import UserInfo from './components/UserInfo/UserInfo';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Logo from './components/logo/Logo';
-
-const host = [process.env.REACT_APP_HOSTNAME, process.env.REACT_APP_PORT].filter(a => a).join(':');
-console.log({ host });
+import { host } from './components/utils/utils';
 
 const particlesOptions = {
 	particles: {
