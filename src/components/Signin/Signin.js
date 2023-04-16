@@ -1,5 +1,6 @@
 import React from 'react';
 import { host } from '../utils/utils';
+import Spinner from '../Spinner/Spinner';
 
 class Signin extends React.Component {
 	constructor(props) {
@@ -7,6 +8,7 @@ class Signin extends React.Component {
 		this.state = {
 			signInEmail: '',
 			signInPassword: '',
+			isFetching: false,
 			isSigninFailed: false,
 			isFetchFailed: false
 
@@ -14,6 +16,7 @@ class Signin extends React.Component {
 	}
 
 	onSubmitSignIn = () => {
+		this.setState({ isFetching: true });
 		fetch(`${host}/signin`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -22,7 +25,10 @@ class Signin extends React.Component {
 				password: this.state.signInPassword
 			})
 		})
-			.then(response => response.json())
+			.then(response => {
+				this.setState({ isFetching: false });
+				return response.json()
+			})
 			.then(user => {
 				if (user.id) {
 					this.setState({ isSigninFailed: false, isFetchFailed: false });
@@ -35,7 +41,7 @@ class Signin extends React.Component {
 			})
 			.catch(err => {
 				if (err.message === "Failed to fetch") {
-					this.setState({ isFetchFailed: true });
+					this.setState({ isFetchFailed: true, isFetching: false });
 				}
 				// console.table({ err });
 			});
@@ -91,6 +97,7 @@ class Signin extends React.Component {
 							>
 								Register
 							</p>
+							{this.state.isFetching && <Spinner />}
 							{this.state.isSigninFailed &&
 								<p className="db fw6 lh-copy f6 bg-yellow">Wrong credentials! <span role='img' aria-label='face-palm'>🤦‍♂️</span></p>}
 							{this.state.isFetchFailed &&

@@ -1,5 +1,6 @@
 import React from 'react';
 import { host } from '../utils/utils';
+import Spinner from '../Spinner/Spinner';
 
 class Register extends React.Component {
 	constructor(props) {
@@ -9,11 +10,13 @@ class Register extends React.Component {
 			registerEmail: '',
 			registerPassword: '',
 			isRegistrationFailed: false,
+			isFetching: false,
 			isFetchFailed: false
 		};
 	}
 
 	onSubmitRegister = () => {
+		this.setState({ isFetching: true });
 		fetch(`${host}/register`, {
 			method: 'post',
 			headers: { 'Content-Type': 'application/json' },
@@ -25,6 +28,7 @@ class Register extends React.Component {
 		})
 			.then(response => response.json())
 			.then(user => {
+				this.setState({ isFetching: false });
 				if (user.id) {
 					this.setState({ isRegistrationFailed: false, isFetchFailed: false });
 					this.props.loadUser(user);
@@ -34,6 +38,7 @@ class Register extends React.Component {
 				}
 			})
 			.catch(err => {
+				this.setState({ isFetching: false });
 				if (err.message.startsWith('Failed')) {
 					this.setState({ isFetchFailed: true });
 				}
@@ -101,6 +106,7 @@ class Register extends React.Component {
 								type="submit" value="Register"
 								onClick={this.onSubmitRegister}
 							/>
+							{this.state.isFetching && <Spinner />}
 							{this.state.isRegistrationFailed &&
 								<p className="db mv4 fw6 lh-copy f6 bg-yellow">Registration failed! <span role='img' aria-label='no-entry'>⛔</span></p>}
 							{this.state.isFetchFailed &&

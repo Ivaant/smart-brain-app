@@ -9,6 +9,7 @@ import UserInfo from './components/UserInfo/UserInfo';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Logo from './components/logo/Logo';
 import { host } from './components/utils/utils';
+import Spinner from './components/Spinner/Spinner';
 
 const particlesOptions = {
 	particles: {
@@ -34,6 +35,7 @@ const initialState = {
 	boxes: [],
 	route: 'signin',
 	isSignedIn: false,
+	isFetching: false,
 	user: {
 		id: '',
 		name: '',
@@ -76,7 +78,7 @@ class App extends Component {
 
 
 	onDetectClick = () => {
-		this.setState({ imageUrl: this.state.input });
+		this.setState({ imageUrl: this.state.input, isFetching: true });
 
 		fetch(`${host}/imageurl`, {
 			method: 'post',
@@ -88,26 +90,33 @@ class App extends Component {
 			.then(response => response.json())
 			.then(response => {
 				if (response) {
-					fetch(`${host}/image`, {
-						method: 'put',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({
-							id: this.state.user.id,
-							imageUrl: this.state.imageUrl
+					const clarifaiData = response.outputs[0].data.regions;
+					if (clarifaiData && clarifaiData.length > 0) {
+						this.displayFaceBox(this.getFaceLocations(clarifaiData));
+						fetch(`${host}/image`, {
+							method: 'put',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({
+								id: this.state.user.id,
+								imageUrl: this.state.imageUrl
+							})
 						})
-					})
-						.then(response => response.json())
-						.then(count => {
-							this.setState(Object.assign(this.state.user, { entries: count }));
-						})
-						.catch(console.log);
-				}
-				const clarifaiData = response.outputs[0].data.regions;
-				if (clarifaiData && clarifaiData.length > 0) {
-					this.displayFaceBox(this.getFaceLocations(clarifaiData));
+							.then(respData => respData.json())
+							.then(count => {
+								this.setState(Object.assign(this.state.user, { entries: count }));
+								this.setState({ isFetching: false });
+							})
+							.catch(err => {
+								this.setState({ isFetching: false });
+								return console.log(err);
+							})
+					}
 				}
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				this.setState({ isFetching: false });
+				return console.log(err);
+			});
 	}
 
 	onUrlChange = (event) => {
@@ -167,6 +176,7 @@ class App extends Component {
 				}
 				<Particles className='particles'
 					params={particlesOptions} />
+				{this.state.isFetching && <Spinner />}
 			</div>
 		);
 	}
