@@ -67,6 +67,8 @@ class Signin extends React.Component {
 								<input
 									className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
 									type="email"
+									pattern="^\S+@\S+\.\S+$"
+									required
 									name="email-address"
 									id="email-address"
 									onChange={this.onEmailChange}
@@ -77,6 +79,7 @@ class Signin extends React.Component {
 								<input
 									className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
 									type="password"
+									required
 									name="password"
 									id="password"
 									onChange={this.onPasswordChange}

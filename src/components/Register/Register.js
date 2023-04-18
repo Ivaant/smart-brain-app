@@ -83,6 +83,7 @@ class Register extends React.Component {
 									type="email"
 									name="email-address"
 									required
+									pattern="^\S+@\S+\.\S+$"
 									id="email-address"
 									onChange={this.onEmailChange}
 								/>
